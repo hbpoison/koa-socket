@@ -25,7 +25,7 @@ var io = null;
 /**
  * Store initialed namespaces
  */
-var nps = [];
+var namespaces = [];
 
 
 /**
@@ -47,7 +47,12 @@ koaSocket.start = function( koa ) {
 
     koa.server = http.createServer( koa.callback() );
     io = koa.io = socketIO( koa.server );
-    return new Namespace(io, _middleware);
+    var ns = new Namespace(io, _middleware);
+    namespaces.push({
+        path: '/',
+        io: ns
+    });
+    return ns;
 };
 
 
@@ -73,6 +78,30 @@ koaSocket.of = function( path ) {
         return;
     }
 
-    return new Namespace(io, _middleware, path);
-}
+    var ns = null;
+
+    namespaces.forEach(function( nsp ) {
+        if ( path == nsp.path ) {
+            ns = nsp.io;
+        }
+    });
+
+    if (!!ns) {
+        return ns;
+    }
+
+    var ns = new Namespace(io, _middleware, path);
+    namespaces.push({
+        path: path,
+        io: ns
+    });
+    return ns;
+};
+
+/**
+ * Get all namespaces data
+ */
+koaSocket.getNamespaces = function() {
+    return namespaces;
+};
 
