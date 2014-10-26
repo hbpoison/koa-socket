@@ -41,8 +41,14 @@ socket.start( app );
 
 var nsp = socket.of( '/my-namespace' );
 
+var nsp2 = socket.of( '/my-another-namespace' );
+
 nsp.on( 'join', function *( data ) {
-  yield console.log( 'join event fired', data );
+  yield console.log( 'join event fired in my namespace', data );
+});
+
+nsp2.on( 'join', function *( data ) {
+  yield console.log( 'join event fired in anoth namespace', data );
 });
 
 app.server.listen( process.env.PORT || 3000 );
