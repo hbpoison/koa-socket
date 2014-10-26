@@ -7,7 +7,7 @@
 
 var http = require( 'http' ),
     socketIO = require( 'socket.io' ),
-    Socket = require( './lib/namespace' );
+    Namespace = require( './lib/namespace' );
 
 
 /**
