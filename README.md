@@ -18,10 +18,31 @@ var app = koa();
 
 app.use( ... );
 
+var io = socket.start( app );
+
+io.on( 'join', function *( data ) {
+  yield console.log( 'join event fired', data );
+});
+
+app.server.listen( process.env.PORT || 3000 );
+```
+
+## Namespaces
+
+```
+var koa = require( 'koa' );
+var socket = require( 'koa-socket' );
+
+var app = koa();
+
+app.use( ... );
+
 socket.start( app );
 
-socket.on( 'join', function( data ) {
-  console.log( 'join event fired', data );
+var nsp = socket.of( '/my-namespace' );
+
+nsp.on( 'join', function *( data ) {
+  yield console.log( 'join event fired', data );
 });
 
 app.server.listen( process.env.PORT || 3000 );
@@ -59,7 +80,7 @@ socket.emit( 'event', {
 });
 
 // Listening on the server
-socket.on( 'event', function( packet ) {
+socket.on( 'event', function *( packet ) {
   // Id now exists on the packet thanks to middleware
   // Although in this trivial example it can be referenced on the context
   console.log( packet.id );
