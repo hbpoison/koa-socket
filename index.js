@@ -68,7 +68,7 @@ koaSocket.use = function( fn ) {
  * @param path {String}
  */
 koaSocket.of = function( path ) {
-    if ( !socket ) {
+    if ( !io ) {
         console.error( 'Connection not exists!' );
         return;
     }
